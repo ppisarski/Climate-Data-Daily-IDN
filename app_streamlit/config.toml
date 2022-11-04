@@ -1,0 +1,20 @@
+[server]
+port = 80
+enableCORS = true
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+# Primary accent for interactive elements
+primaryColor = '#011627'
+# Background color for the main content area
+backgroundColor = '#fdfffc'
+# Background color for sidebar and most interactive widgets
+secondaryBackgroundColor = '#fdfffc'
+# Color used for almost all text
+textColor = '#011627'
+# Font family for all text in the app, except code blocks
+# Accepted values (serif | sans serif | monospace)
+# Default: "sans serif"
+font = "sans serif"

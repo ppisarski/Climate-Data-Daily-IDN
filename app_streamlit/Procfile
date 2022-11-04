@@ -1,0 +1,4 @@
+web: mkdir ~/.streamlit &&  \
+    cp ./config.toml ~/.streamlit/config.toml &&  \
+    cp ./credentials.toml ~/.streamlit/credentials.toml &&  \
+    streamlit run app.py

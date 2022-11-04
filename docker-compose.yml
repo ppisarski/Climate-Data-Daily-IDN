@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: ./app_streamlit/Dockerfile
+    volumes:
+      - ./app_streamlit:/app
+    ports:
+      - 8000:80
+    command: streamlit run app.py
+    restart: unless-stopped
