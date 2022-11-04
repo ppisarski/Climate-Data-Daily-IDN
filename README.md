@@ -26,5 +26,10 @@ To run the streamlit application as a docker container
 1. Install heroku cli - [doc](https://devcenter.heroku.com/articles/heroku-cli)
 2. Log in to Heroku `heroku login`
 3. Create the app `heroku create climate-data-indonesia`
-4. Push files to heroku `git push heroku master`
+4. Add git remote `heroku git:remote -a climate-data-indonesia`
+5. Commit code and deploy it to Heroku
 
+
+    git add .
+    git commit -am "adding streamlit app"
+    git push heroku main`
