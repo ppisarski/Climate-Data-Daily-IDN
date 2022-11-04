@@ -146,7 +146,7 @@ def show_timeseries(df: pd.DataFrame):
     st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
     with st.expander("Correlation with other variables"):
-        var2 = st.selectbox(f"{var} vs", df.columns, label_visibility="collapsed")
+        var2 = st.selectbox(f"{var} vs", data.columns, label_visibility="collapsed")
         fig = px.scatter(data, x=var, y=var2, color=groupby)
         st.plotly_chart(fig, use_container_width=True, config=PLOTLY_CONFIG)
 
@@ -178,7 +178,7 @@ def main():
     st.sidebar.title("Analysis")
     layout = st.sidebar.selectbox("Type", [
         "Explore Timeseries",
-        # "Model Timeseries",
+        "Model Timeseries",
     ])
     st.title(f"Climate Data - {layout}")
     climate_data_df = get_climate_data()
@@ -199,8 +199,8 @@ def main():
 
     if layout in ["Explore Timeseries"]:
         explore(station_detail_df, climate_data_df)
-    # if layout in ["Model Timeseries"]:
-    #     model(station_detail_df, climate_data_df)
+    if layout in ["Model Timeseries"]:
+        model(station_detail_df, climate_data_df)
     # st.markdown(__doc__)
 
 

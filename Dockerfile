@@ -1,5 +1,5 @@
 # pull official base image
-FROM python:3.10-buster
+FROM python:3.10-slim
 
 # set work directory
 WORKDIR /app
@@ -16,14 +16,14 @@ COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt && rm -rf /root/.cache/pip
 
 # copy project
-COPY ./app_streamlit/ ./
-COPY ./data/ ./data/
+COPY ./app_streamlit /app/app_streamlit
+COPY ./data /app/data
 
 # setup toml server
 EXPOSE 80
 RUN mkdir ~/.streamlit &&  \
-    cp ./config.toml ~/.streamlit/config.toml &&  \
-    cp ./credentials.toml ~/.streamlit/credentials.toml
+    cp app_streamlit/config.toml ~/.streamlit/config.toml &&  \
+    cp app_streamlit/credentials.toml ~/.streamlit/credentials.toml
 
 # start the app
 CMD streamlit run app_streamlit/app.py
