@@ -1,5 +1,5 @@
 """
-Copyright © 2022 Pawel Pisarski.
+Copyright © 2022 Pawel Pisarski
 """
 
 import os
@@ -21,7 +21,7 @@ STREAMLIT_STYLE = """
     <style>
         footer {visibility: hidden;}
         footer:after {
-            content:'Pawel Pisarski';
+            content:'Copyright © 2022 Pawel Pisarski';
             visibility: visible;
             display: block;
             position: relative;
