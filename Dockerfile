@@ -20,7 +20,7 @@ COPY ./app_streamlit /app/app_streamlit
 COPY ./data /app/data
 
 # setup toml server
-EXPOSE 80
+EXPOSE 8000
 RUN mkdir ~/.streamlit &&  \
     cp app_streamlit/config.toml ~/.streamlit/config.toml &&  \
     cp app_streamlit/credentials.toml ~/.streamlit/credentials.toml

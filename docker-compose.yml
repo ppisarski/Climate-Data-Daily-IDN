@@ -6,6 +6,6 @@ services:
     volumes:
       - .:/app
     ports:
-      - 8000:80
+      - 8000:8000
     command: streamlit run app_streamlit/app.py
     restart: unless-stopped
