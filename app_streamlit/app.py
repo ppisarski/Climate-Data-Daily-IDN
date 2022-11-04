@@ -1,6 +1,5 @@
 """
-Climate Data Daily IDN
-----------------------
+Copyright © 2022 Pawel Pisarski.
 """
 
 import os
@@ -16,8 +15,22 @@ from datetime import datetime
 pio.templates.default = "plotly_white"
 
 PLOTLY_CONFIG = dict(displayModeBar=True, displaylogo=False)
-PLOTLY_LAYOUT = dict(margin=dict(r=0, t=0, l=0, b=0), plot_bgcolor="rgba(0,0,0,0)",
-                     xaxis=dict(exponentformat="power"), yaxis=dict(exponentformat="power"))
+PLOTLY_LAYOUT = dict(margin=dict(r=0, t=0, l=0, b=0), plot_bgcolor="rgba(0,0,0,0)")
+
+STREAMLIT_STYLE = """
+    <style>
+        footer {visibility: hidden;}
+        footer:after {
+            content:'Pawel Pisarski';
+            visibility: visible;
+            display: block;
+            position: relative;
+            padding: 5px;
+            top: 2px;
+        }
+    </style>
+"""
+
 
 LABELS = dict(
     Tn="min temperature (°C)",
@@ -201,7 +214,8 @@ def main():
         explore(station_detail_df, climate_data_df)
     if layout in ["Model Timeseries"]:
         model(station_detail_df, climate_data_df)
-    # st.markdown(__doc__)
+    st.markdown(__doc__)
+    # st.markdown(STREAMLIT_STYLE, unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
