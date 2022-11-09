@@ -63,6 +63,7 @@ def get_province_detail() -> pd.DataFrame:
     Province in Indonesia identifier.
     """
     df = pd.read_csv(os.path.join("data", "province_detail.csv")).astype(dict(province_id="int8"))
+    # print(df.info(memory_usage='deep'))
     return df.sort_values(by=["province_id"])
 
 
@@ -73,8 +74,9 @@ def get_station_detail() -> pd.DataFrame:
     Station id is included in climate data to differentiate which station record which data.
     """
     df = pd.read_csv(os.path.join("data", "station_detail.csv"))\
-        .astype(dict(province_id="int8", region_id="int8", station_id="int8", latitude="float16", longitude="float16"))
+        .astype(dict(province_id="int8", region_id="int16", station_id="int16", latitude="float16", longitude="float16"))
     df = pd.merge(df, get_province_detail(), on="province_id", how="left")
+    # print(df.info(memory_usage='deep'))
     return df.sort_values(by=["province_id", "region_id", "station_id"])
 
 
@@ -84,10 +86,11 @@ def get_climate_data() -> pd.DataFrame:
     Climate data in Indonesia from 2010 to 2020.
     """
     df = pd.read_csv(os.path.join("data", "climate_data.csv"))\
-        .astype(dict(station_id="int8", Tn="float16", Tx="float16", Tavg="float16",
+        .astype(dict(station_id="int16", Tn="float16", Tx="float16", Tavg="float16",
                      RH_avg="float16", RR="float16", ss="float16", ff_x="float16", ddd_x="float16", ff_avg="float16"))
     df.date = pd.to_datetime(df.date, dayfirst=True)
     df = pd.merge(df, get_station_detail(), on="station_id", how="left")
+    # print(df.info(memory_usage='deep'))
     return df.sort_values(by=["province_id", "region_id", "station_id", "date"])
 
 
