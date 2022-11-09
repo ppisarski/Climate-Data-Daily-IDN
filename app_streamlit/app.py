@@ -62,8 +62,8 @@ def get_province_detail() -> pd.DataFrame:
     """
     Province in Indonesia identifier.
     """
-    df = pd.read_csv(os.path.join("data", "province_detail.csv")).astype(dict(province_id="str"))
-    return df
+    df = pd.read_csv(os.path.join("data", "province_detail.csv")).astype(dict(province_id="int8"))
+    return df.sort_values(by=["province_id"])
 
 
 @st.cache(persist=False, allow_output_mutation=True)
@@ -72,11 +72,10 @@ def get_station_detail() -> pd.DataFrame:
     The station which the data is recorded.
     Station id is included in climate data to differentiate which station record which data.
     """
-    province_detail_df = pd.read_csv(os.path.join("data", "province_detail.csv"))
-    station_detail_df = pd.read_csv(os.path.join("data", "station_detail.csv"))
-    station_detail_df = pd.merge(station_detail_df, province_detail_df, on="province_id", how="left")
-    station_detail_df = station_detail_df.astype(dict(province_id="str", region_id="str", station_id="str"))
-    return station_detail_df.sort_values(by=["province_id", "region_id", "station_id"])
+    df = pd.read_csv(os.path.join("data", "station_detail.csv"))\
+        .astype(dict(province_id="int8", region_id="int8", station_id="int8", latitude="float16", longitude="float16"))
+    df = pd.merge(df, get_province_detail(), on="province_id", how="left")
+    return df.sort_values(by=["province_id", "region_id", "station_id"])
 
 
 @st.cache(persist=False, allow_output_mutation=True)
@@ -84,13 +83,11 @@ def get_climate_data() -> pd.DataFrame:
     """
     Climate data in Indonesia from 2010 to 2020.
     """
-    province_detail_df = pd.read_csv(os.path.join("data", "province_detail.csv"))
-    station_detail_df = pd.read_csv(os.path.join("data", "station_detail.csv"))
-    station_detail_df = pd.merge(station_detail_df, province_detail_df, on="province_id", how="left")
-    df = pd.read_csv(os.path.join("data", "climate_data.csv"), parse_dates=True, date_parser=lambda x: datetime.strptime(x, '%d-%m-%Y'))
+    df = pd.read_csv(os.path.join("data", "climate_data.csv"))\
+        .astype(dict(station_id="int8", Tn="float16", Tx="float16", Tavg="float16",
+                     RH_avg="float16", RR="float16", ss="float16", ff_x="float16", ddd_x="float16", ff_avg="float16"))
     df.date = pd.to_datetime(df.date, dayfirst=True)
-    df = pd.merge(df, station_detail_df, on="station_id", how="left")
-    df = df.astype(dict(province_id="str", region_id="str", station_id="str"))
+    df = pd.merge(df, get_station_detail(), on="station_id", how="left")
     return df.sort_values(by=["province_id", "region_id", "station_id", "date"])
 
 
@@ -170,22 +167,6 @@ def show_timeseries(df: pd.DataFrame):
             st.dataframe(data.set_index(groupby).describe())
 
 
-def explore(station_detail_df: pd.DataFrame, climate_data_df: pd.DataFrame):
-    """
-    Exploratory data analysis
-    """
-    stations = station_detail_df.station_id.tolist()
-    show_timeseries(climate_data_df[climate_data_df.station_id.isin(stations)])
-
-
-def model(station_detail_df: pd.DataFrame, climate_data_df: pd.DataFrame):
-    """
-    Timeseries modelling
-    """
-    stations = station_detail_df.station_id.tolist()
-    show_timeseries(climate_data_df[climate_data_df.station_id.isin(stations)])
-
-
 def main():
     st.set_page_config(page_title="Climate Data", layout="wide")
     st.sidebar.title("Analysis")
@@ -209,11 +190,12 @@ def main():
         station_detail_df = station_detail_df[station_detail_df.station_name == station]
 
     show_station_map(station_detail_df)
+    stations = station_detail_df.station_id.tolist()
 
     if layout in ["Explore Timeseries"]:
-        explore(station_detail_df, climate_data_df)
+        show_timeseries(climate_data_df[climate_data_df.station_id.isin(stations)])
     if layout in ["Model Timeseries"]:
-        model(station_detail_df, climate_data_df)
+        show_timeseries(climate_data_df[climate_data_df.station_id.isin(stations)])
     st.markdown(__doc__)
     # st.markdown(STREAMLIT_STYLE, unsafe_allow_html=True)
 
